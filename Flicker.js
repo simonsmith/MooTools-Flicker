@@ -17,27 +17,8 @@
 	*/
 	
 	var Flicker = new Class(function() {
-			
-		/**
-		* Loop through object and delete passed properties
-		*
-		* @private
-		* @param	{Object}	object
-		* @param	{Array}		keys
-		*/
-		var deleteProps = function( object, keys ) {
-
-			var newObj = Object.clone( object );
-
-			keys.each(function( item ) {
-
-				delete newObj[item];
-
-			});
-
-			return newObj;
-
-		};
+		
+		'use strict';
 		
 		if ( !Array.shuffle ) {
 			
@@ -72,7 +53,6 @@
 				
 				this.container = document.id( container );
 				this.userId = userId;
-				this.insertElements = this.options.insertElements;
 
 				this.formatURL();
 				
@@ -106,16 +86,26 @@
 				
 				url : 'http://api.flickr.com/services/feeds/photos_public.gne?&id={id}&lang={lang}&format=json',
 				
+				// Type of element to contain each photo
 				element : 'li',
 				
 				lang : 'en-uk',
 				
+				// Attached to each containing element
 				className : 'flickr-photo',
 				
+				/* 
+					Size of images to return:
+					_s = 80x80
+					_t = 100x75
+					_m = 240x180
+					'' (empty string) = 500x375
+				*/	
 				imgType : '_m',
 				
 				random : false,
 				
+				// Callback passed array of photo elements
 				onImagesReady : function( elements ) {
 					
 					elements.fade('hide').inject( $(this) );
@@ -159,6 +149,7 @@
 			* Returns amount of items from photos array. Optionally shuffles array
 			*
 			* @protected
+			* @returns	{Array}
 			*/
 			organisePhotos : function( photos ) {
 				
@@ -168,6 +159,12 @@
 				
 			}.protect(),
 
+			/**
+			* Converts JSON response into DOM elements
+			*
+			* @public
+			* @param	{Object}	json
+			*/
 			transformToHTML : function( json ) {
 
 				var photos = this.organisePhotos( json.items ),
@@ -179,33 +176,33 @@
 				// Construct photo markup
 				photos.each(function( item, index ) {
 					
-					var meta = deleteProps( item, [ 'title', 'link', 'media' ] ),
+					var link, element;
 
-						link = new Element('a', { href : item.link } ).grab(
-							
-							new Element('img', {
+					link = new Element('a', { href : item.link } ).grab(
 						
-								src : item.media.m.replace( '_m', imgType ),
-						
-								alt : item.title
-						
-							})
-						);
+						new Element('img', {
 					
-					var element = new Element( elementType, {
+							src : item.media.m.replace( '_m', imgType ),
+					
+							alt : item.title
+					
+						})
+						
+					);
+					
+					element = new Element( elementType, {
 						
 						'class' : className
 						
 					})
 					.addClass( 'photo' + (index + 1) )
-					.store( 'image-meta', meta )
 					.grab( link );
 					
 					element.inject( container );
 					
 				}, this );	
 				
-				this.fireEvent( 'imagesReady', [ container.getChildren() ] );
+				this.fireEvent( 'imagesReady', [ $$( container.getChildren() ) ] );
 
 			},
 			
@@ -218,3 +215,4 @@
 		}
 		
 	}());
+	

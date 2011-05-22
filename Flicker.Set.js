@@ -1,4 +1,4 @@
-
+	
 	/*
 	---
 	
@@ -19,6 +19,8 @@
 
 	Flicker.Set = new Class(function() {
 
+		'use strict';
+
 		var insertAlbumLink = function( data ) {
 		
 			var url = this.options.photosetURL.substitute({
@@ -35,7 +37,7 @@
 				
 					href : url,
 				
-					text : 'View this set on Flickr'
+					text : this.options.photosetLinkText
 				
 				})
 				
@@ -63,9 +65,13 @@
 			
 				url : 'http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&photoset_id={photoset}&api_key={key}&lang={lang}&extras={extras}&user_id={id}&format=json',
 				
+				// Additional data to request from Flickr API
+				// http://www.flickr.com/services/api/flickr.photosets.getPhotos.html
 				extras : 'date_taken,url_sq,url_m',
 				
-				photosetURL : 'http://www.flickr.com/photos/{user}/sets/{photoset}/',	
+				photosetURL : 'http://www.flickr.com/photos/{user}/sets/{photoset}/',
+				
+				photosetLinkText : 'View this set on Flickr',	
 				
 				photosetLinkPos : 'after'			
 			
@@ -103,10 +109,12 @@
 					elementType = this.options.element,
 					className = this.options.className,
 					container = new Element('div');
-				
+
 				photos.each(function( item, index ) {
 					
-					var link = new Element( 'a', { href : item.url_m } ).grab(
+					var link, element;
+					
+					link = new Element( 'a', { href : item.url_m } ).grab(
 							
 						new Element('img', {
 
@@ -121,7 +129,7 @@
 						})
 					);
 					
-					var element = new Element( elementType, {
+					element = new Element( elementType, {
 						
 						'class' : className
 						
@@ -133,7 +141,7 @@
 					
 				}, this );
 				
-				this.fireEvent( 'imagesReady', [ container.getChildren() ] );
+				this.fireEvent( 'imagesReady', [ $$(container.getChildren()) ] );
 				
 				insertAlbumLink.call( this, json.photoset );
 				

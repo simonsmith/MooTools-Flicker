@@ -21,7 +21,7 @@
 
 		'use strict';
 
-		var insertAlbumLink = function( data ) {
+		function insertAlbumLink( data ) {
 		
 			var url = this.options.photosetURL.substitute({
 			
@@ -46,7 +46,7 @@
 			.inject( $(this), this.options.photosetLinkPos )
 			.fade('in');
 			
-		};
+		}
 
 		return {
 

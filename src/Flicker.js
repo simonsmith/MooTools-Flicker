@@ -57,25 +57,18 @@
 				this.formatURL();
 				
 				this.request = new Request.JSONP({
-
 					callbackKey: 'jsoncallback',
-
 					url: this.url,
-
 					onRequest : function() {
 
 						this.fireEvent( 'request' );
 
 					}.bind( this ),
-
 					onComplete: function( json ) {
-
 						this.fireEvent( 'complete', json );
 
 						this.transformToHTML( json );
-
 					}.bind( this )
-
 				});
 
 			},
@@ -83,17 +76,15 @@
 			options : {
 
 				num : 6,
-				
 				url : 'http://api.flickr.com/services/feeds/photos_public.gne?&id={id}&lang={lang}&format=json',
 				
 				// Type of element to contain each photo
-				element : 'li',
-				
+				element : 'li', 
 				lang : 'en-uk',
 				
-				// Attached to each containing element
-				className : 'flickr-photo',
-				
+				// Attached to each containing element	
+				className : 'flickr-photo', 		
+					
 				/* 
 					Size of images to return:
 					_s = 80x80
@@ -102,7 +93,6 @@
 					'' (empty string) = 500x375
 				*/	
 				imgType : '_m',
-				
 				random : false,
 				
 				// Callback passed array of photo elements
@@ -112,7 +102,6 @@
 					elements.fade('in');
 
 				}
-
 			},
 			
 			/**
@@ -123,7 +112,6 @@
 			getPhotos : function() {
 			
 				$(this).empty();
-			
 				this.request.send();
 				
 			},
@@ -136,11 +124,8 @@
 			formatURL : function() {
 			
 				this.url = this.options.url.substitute({
-					 
 					id : this.userId,
-					
 					lang : this.options.lang
-					 
 				});
 				
 			}.protect(),
@@ -181,19 +166,14 @@
 					link = new Element('a', { href : item.link } ).grab(
 						
 						new Element('img', {
-					
 							src : item.media.m.replace( '_m', imgType ),
-					
 							alt : item.title
-					
 						})
 						
 					);
 					
 					element = new Element( elementType, {
-						
 						'class' : className
-						
 					})
 					.addClass( 'photo' + (index + 1) )
 					.grab( link );

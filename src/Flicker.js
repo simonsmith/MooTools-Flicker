@@ -65,9 +65,10 @@
 
 					}.bind( this ),
 					onComplete: function( json ) {
+						
 						this.fireEvent( 'complete', json );
-
 						this.transformToHTML( json );
+						
 					}.bind( this )
 				});
 
